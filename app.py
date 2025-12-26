@@ -48,7 +48,13 @@ def missing_token_callback(error):
         'errors': ['Authorization token is missing. Please login.']
     }), 401
 
-CORS(app, origins=['http://localhost:4200'], supports_credentials=True)
+# CORS configuration - allow requests from frontend domains
+# In production, set CORS_ORIGINS environment variable with comma-separated origins
+# Example: CORS_ORIGINS=https://athar-cosmetics-front.onrender.com,http://localhost:4200
+cors_origins = os.getenv('CORS_ORIGINS', 'http://localhost:4200').split(',')
+# Remove any empty strings from the list
+cors_origins = [origin.strip() for origin in cors_origins if origin.strip()]
+CORS(app, origins=cors_origins, supports_credentials=True, methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], allow_headers=['Content-Type', 'Authorization'])
 
 # Import routes after db is initialized
 from routes.auth import auth_bp
@@ -97,5 +103,5 @@ def handle_400(e):
     }), 400
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    app.run(debug=True, host='0.0.0.0', port=5000)
 
