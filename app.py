@@ -49,11 +49,11 @@ def missing_token_callback(error):
     }), 401
 
 # CORS configuration - allow requests from frontend domains
-# In production, set CORS_ORIGINS environment variable with comma-separated origins
-# Example: CORS_ORIGINS=https://athar-cosmetics-front.onrender.com,http://localhost:4200
-cors_origins = os.getenv('CORS_ORIGINS', 'http://localhost:4200').split(',')
-# Remove any empty strings from the list
-cors_origins = [origin.strip() for origin in cors_origins if origin.strip()]
+cors_origins = [
+    'http://localhost:4200',  # Local development
+    'https://athar-cosmetics-front.onrender.com',  # Production frontend
+    'https://athar-cosmetics.onrender.com'  # Production backend (if needed)
+]
 CORS(app, origins=cors_origins, supports_credentials=True, methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], allow_headers=['Content-Type', 'Authorization'])
 
 # Import routes after db is initialized
